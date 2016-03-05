@@ -243,20 +243,5 @@ if( file.type == SmbFile.TYPE_NAMED_PIPE ) {
         }
         return 0;
     }
-    // >>SmbAuthenticator
-    /**
-     * Construct a SmbFileInputStream object using a specified SmbAuthenticator.
-     * The authentication information in URL will be ignored.
-     * 
-     * @param url 
-     * @param authenticator  
-     * @throws UnknownHostException 
-     * @throws MalformedURLException 
-     * @throws SmbException 
-     */
-    public SmbFileInputStream( String url, SmbExtendedAuthenticator authenticator ) throws SmbException, MalformedURLException, UnknownHostException{
-        this( new SmbFile( url, authenticator ));
-    }
-    // SmbAuthenticator<<
 }
 

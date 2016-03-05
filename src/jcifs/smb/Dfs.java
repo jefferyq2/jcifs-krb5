@@ -26,7 +26,7 @@ import jcifs.util.*;
 import jcifs.Config;
 
 public class Dfs {
-	
+
     static class CacheEntry {
         long expiration;
         HashMap map;
@@ -49,42 +49,21 @@ public class Dfs {
     protected CacheEntry _domains = null; /* aka trusted domains cache */
     protected CacheEntry referrals = null;
 
-    // >>SmbAuthenticator Fixed trusted domain issue.
-    public HashMap getTrustedDomains(SmbExtendedAuthenticator authenticator,NtlmPasswordAuthentication auth) throws SmbAuthException {
-//    public HashMap getTrustedDomains(NtlmPasswordAuthentication auth) throws SmbAuthException {
-    // SmbAuthenticator<<
-    	
-        // >>SmbAuthenticator Fixed trusted domain issue.
-    	if (authenticator == null){
-   	    // SmbAuthenticator<<
-	    	if (DISABLED || auth.domain == "?")
-	            return null;
-        // >>SmbAuthenticator Fixed trusted domain issue.
-    	}
-   	    // SmbAuthenticator<<
+    public HashMap getTrustedDomains(NtlmPasswordAuthentication auth) throws SmbAuthException {
+        if (DISABLED || auth.domain == "?")
+            return null;
+
         if (_domains != null && System.currentTimeMillis() > _domains.expiration) {
             _domains = null;
         }
         if (_domains != null)
             return _domains.map;
         try {
-            // >>SmbAuthenticator Fixed trusted domain issue.
-        	String authDomain = "";
-        	if (authenticator != null){
-        		authDomain = authenticator.getDomain();
-        	}else{
-        		authDomain = auth.domain; 
-        	}
-            UniAddress addr = UniAddress.getByName(authDomain, true);
-       	    // SmbAuthenticator<<
-//            UniAddress addr = UniAddress.getByName(auth.domain, true);
+            UniAddress addr = UniAddress.getByName(auth.domain, true);
             SmbTransport trans = SmbTransport.getSmbTransport(addr, 0);
             CacheEntry entry = new CacheEntry(Dfs.TTL * 10L);
 
-            // >>SmbAuthenticator Fixed trusted domain issue.
-            DfsReferral dr = trans.getDfsReferrals(authenticator,auth, "", 0);
-//            DfsReferral dr = trans.getDfsReferrals(auth, "", 0);
-       	    // SmbAuthenticator<<
+            DfsReferral dr = trans.getDfsReferrals(auth, "", 0);
             if (dr != null) {
                 DfsReferral start = dr;
                 do {
@@ -105,37 +84,24 @@ public class Dfs {
         }
         return null;
     }
-    // >>SmbAuthenticator Fixed trusted domain issue.
-    public boolean isTrustedDomain(String domain,SmbExtendedAuthenticator authenticator,
+    public boolean isTrustedDomain(String domain,
                     NtlmPasswordAuthentication auth) throws SmbAuthException
-//    public boolean isTrustedDomain(String domain,
-//            NtlmPasswordAuthentication auth) throws SmbAuthException
-    // SmbAuthenticator<<
     {
-        // >>SmbAuthenticator Fixed trusted domain issue.
-        HashMap domains = getTrustedDomains(authenticator,auth);
-        // SmbAuthenticator<<
+        HashMap domains = getTrustedDomains(auth);
         if (domains == null)
             return false;
         domain = domain.toLowerCase();
         return domains.get(domain) != null;
     }
-    // >>SmbAuthenticator Fixed trusted domain issue.
-    public SmbTransport getDc(String domain, SmbExtendedAuthenticator authenticator,
-    		  NtlmPasswordAuthentication auth) throws SmbAuthException {
-//    public SmbTransport getDc(String domain,
-//            NtlmPasswordAuthentication auth) throws SmbAuthException {
-        // SmbAuthenticator<<
+    public SmbTransport getDc(String domain,
+                    NtlmPasswordAuthentication auth) throws SmbAuthException {
         if (DISABLED)
             return null;
 
         try {
             UniAddress addr = UniAddress.getByName(domain, true);
             SmbTransport trans = SmbTransport.getSmbTransport(addr, 0);
-            // >>SmbAuthenticator Fixed trusted domain issue.
-            DfsReferral dr = trans.getDfsReferrals(authenticator,auth, "\\" + domain, 1);
-//            DfsReferral dr = trans.getDfsReferrals(auth, "\\" + domain, 1);
-            // SmbAuthenticator<<
+            DfsReferral dr = trans.getDfsReferrals(auth, "\\" + domain, 1);
             if (dr != null) {
                 DfsReferral start = dr;
                 IOException e = null;
@@ -162,19 +128,11 @@ public class Dfs {
         }
         return null;
     }
-    // >>SmbAuthenticator Fixed trusted domain issue.
     public DfsReferral getReferral(SmbTransport trans,
                     String domain,
                     String root,
                     String path,
-                    SmbExtendedAuthenticator authenticator,
                     NtlmPasswordAuthentication auth) throws SmbAuthException {
-//    public DfsReferral getReferral(SmbTransport trans,
-//            String domain,
-//            String root,
-//            String path,
-//            NtlmPasswordAuthentication auth) throws SmbAuthException {
-    // SmbAuthenticator<<
         if (DISABLED)
             return null;
 
@@ -182,10 +140,7 @@ public class Dfs {
             String p = "\\" + domain + "\\" + root;
             if (path != null)
                 p += path;
-            // >>SmbAuthenticator Fixed trusted domain issue.
-            DfsReferral dr = trans.getDfsReferrals(authenticator,auth, p, 0);
-//            DfsReferral dr = trans.getDfsReferrals(auth, p, 0);
-            // SmbAuthenticator<<
+            DfsReferral dr = trans.getDfsReferrals(auth, p, 0);
             if (dr != null)
                 return dr;
         } catch (IOException ioe) {
@@ -197,17 +152,10 @@ public class Dfs {
         }
         return null;
     }
-    // >>SmbAuthenticator Fixed trusted domain issue.
     public synchronized DfsReferral resolve(String domain,
                 String root,
                 String path,
-                SmbExtendedAuthenticator authenticator,
                 NtlmPasswordAuthentication auth) throws SmbAuthException {
-//      public synchronized DfsReferral resolve(String domain,
-//      String root,
-//      String path,
-//      NtlmPasswordAuthentication auth) throws SmbAuthException {
-        // SmbAuthenticator<<
         DfsReferral dr = null;
         long now = System.currentTimeMillis();
 
@@ -216,10 +164,7 @@ public class Dfs {
         }
         /* domains that can contain DFS points to maps of roots for each
          */
-        // >>SmbAuthenticator Fixed trusted domain issue.
-        HashMap domains = getTrustedDomains(authenticator,auth);
-//        HashMap domains = getTrustedDomains(auth);
-        // SmbAuthenticator<<
+        HashMap domains = getTrustedDomains(auth);
         if (domains != null) {
             domain = domain.toLowerCase();
             /* domain-based DFS root shares to links for each
@@ -240,16 +185,10 @@ public class Dfs {
                 }
 
                 if (links == null) {
-                    // >>SmbAuthenticator Fixed trusted domain issue.
-                    if ((trans = getDc(domain, authenticator,auth)) == null)
-//                    if ((trans = getDc(domain, auth)) == null)
-                    // SmbAuthenticator<<
+                    if ((trans = getDc(domain, auth)) == null)
                         return null;
 
-                    // >>SmbAuthenticator Fixed trusted domain issue.
-                    dr = getReferral(trans, domain, root, path, authenticator,auth);
-//                    dr = getReferral(trans, domain, root, path, auth);
-                    // SmbAuthenticator<<
+                    dr = getReferral(trans, domain, root, path, auth);
                     if (dr != null) {
                         int len = 1 + domain.length() + 1 + root.length();
 
@@ -296,16 +235,9 @@ public class Dfs {
 
                     if (dr == null) {
                         if (trans == null)
-                            // >>SmbAuthenticator Fixed trusted domain issue.
-                            if ((trans = getDc(domain,authenticator, auth)) == null)
-//                            if ((trans = getDc(domain, auth)) == null)
-                            // SmbAuthenticator<<
+                            if ((trans = getDc(domain, auth)) == null)
                                 return null;
-                        // >>SmbAuthenticator Fixed trusted domain issue.
-                        dr = getReferral(trans, domain, root, path, authenticator,auth);
-//                        dr = getReferral(trans, domain, root, path, auth);
-                        // SmbAuthenticator<<
-
+                        dr = getReferral(trans, domain, root, path, auth);
                         if (dr != null) {
                             dr.pathConsumed -= 1 + domain.length() + 1 + root.length();
                             dr.link = link;

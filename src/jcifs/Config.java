@@ -23,8 +23,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.StringTokenizer;
-
-import jcifs.smb.SmbExtendedAuthenticator;
 import jcifs.util.LogStream;
 
 /**
@@ -162,7 +160,7 @@ public static int socketCount = 0;
             prp.load( in );
         }
         try {
-            prp.putAll( System.getProperties() );
+            prp.putAll( (java.util.Map)System.getProperties().clone() );
         } catch( SecurityException se ) {
             if( log.level > 1 )
                 log.println( "SecurityException: jcifs will ignore System properties" );
@@ -347,31 +345,5 @@ public static int socketCount = 0;
         }
         return def;
     }
-    // >>SmbAuthenticator
-    private static SmbExtendedAuthenticator smbAuthenticator = null;
-
-    /**
-     * When use openConnection() method of {@link java.net.URL} class to setup 
-     * a connection, this method will be called to retrieve the predefined 
-     * SmbExtendedAuthenticator.   
-     * 
-     * @return a predefined SmbExtendedAuthenticator object.
-     */
-    public static SmbExtendedAuthenticator getOpneConnectionAuthenticator() {
-        return smbAuthenticator;
-    }
-
-    /**
-     * Before use openConnection() method of {@link java.net.URL} class to setup 
-     * a connection, use this method to defined a SmbExtendedAuthenticator object.
-     * 
-     * @param smbAuthenticator SmbExtendedAuthenticator object
-     */
-    public static void setOpneConnectionAuthenticator(
-            SmbExtendedAuthenticator smbAuthenticator) {
-        Config.smbAuthenticator = smbAuthenticator;
-    }
-// SmbAuthenticator<<
-    
 }
 

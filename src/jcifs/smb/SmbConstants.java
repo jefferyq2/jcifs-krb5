@@ -160,7 +160,5 @@ interface SmbConstants {
     static final String NATIVE_LANMAN =
             Config.getProperty( "jcifs.smb.client.nativeLanMan", "jCIFS" );
     static final int VC_NUMBER = 1;
-    // >>SmbAuthenticator
-//  static final SmbTransport NULL_TRANSPORT = new SmbTransport( null, 0, null, 0 );
-  // SmbAuthenticator<<
+    static final SmbTransport NULL_TRANSPORT = new SmbTransport( null, 0, null, 0 );
 }
