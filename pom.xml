@@ -7,6 +7,16 @@
     <packaging>jar</packaging>
     <name>jcifs-krb5</name>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <prerequisites>
+        <maven>3.2.1</maven>
+    </prerequisites>
+
     <licenses>
         <license>
             <name>GNU Lesser General Public License, version 2.1</name>

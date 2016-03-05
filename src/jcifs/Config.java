@@ -18,12 +18,14 @@
 
 package jcifs;
 
-import java.util.Properties;
+import jcifs.smb.SmbExtendedAuthenticator;
+import jcifs.util.LogStream;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Properties;
 import java.util.StringTokenizer;
-import jcifs.util.LogStream;
 
 /**
  * This class uses a static {@link java.util.Properties} to act
@@ -345,5 +347,31 @@ public static int socketCount = 0;
         }
         return def;
     }
+    // >>SmbAuthenticator
+    private static SmbExtendedAuthenticator smbAuthenticator = null;
+
+    /**
+     * When use openConnection() method of {@link java.net.URL} class to setup
+     * a connection, this method will be called to retrieve the predefined
+     * SmbExtendedAuthenticator.
+     *
+     * @return a predefined SmbExtendedAuthenticator object.
+     */
+    public static SmbExtendedAuthenticator getOpneConnectionAuthenticator() {
+        return smbAuthenticator;
+    }
+
+    /**
+     * Before use openConnection() method of {@link java.net.URL} class to setup
+     * a connection, use this method to defined a SmbExtendedAuthenticator object.
+     *
+     * @param smbAuthenticator SmbExtendedAuthenticator object
+     */
+    public static void setOpneConnectionAuthenticator(
+            SmbExtendedAuthenticator smbAuthenticator) {
+        Config.smbAuthenticator = smbAuthenticator;
+    }
+// SmbAuthenticator<<
+
 }
 

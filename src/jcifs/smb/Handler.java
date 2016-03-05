@@ -18,12 +18,15 @@
 
 package jcifs.smb;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.PrintStream;
+
+import jcifs.Config;
 
 public class Handler extends URLStreamHandler {
 
@@ -33,7 +36,10 @@ public class Handler extends URLStreamHandler {
         return SmbConstants.DEFAULT_PORT;
     }
     public URLConnection openConnection( URL u ) throws IOException {
-        return new SmbFile( u );
+        // >>SmbAuthenticator
+//      return new SmbFile( u );
+      return new SmbFile( u, Config.getOpneConnectionAuthenticator() );
+      // SmbAuthenticator<<
     }
     protected void parseURL( URL u, String spec, int start, int limit ) {
         String host = u.getHost();

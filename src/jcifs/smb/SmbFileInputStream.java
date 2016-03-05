@@ -18,14 +18,13 @@
 
 package jcifs.smb;
 
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.net.MalformedURLException;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-
 import jcifs.util.transport.TransportException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InterruptedIOException;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 
 /**
  * This InputStream can read bytes from a file on an SMB file server. Offsets are 64 bits.
@@ -243,5 +242,20 @@ if( file.type == SmbFile.TYPE_NAMED_PIPE ) {
         }
         return 0;
     }
+    // >>SmbAuthenticator
+    /**
+     * Construct a SmbFileInputStream object using a specified SmbAuthenticator.
+     * The authentication information in URL will be ignored.
+     *
+     * @param url
+     * @param authenticator
+     * @throws UnknownHostException
+     * @throws MalformedURLException
+     * @throws SmbException
+     */
+    public SmbFileInputStream( String url, SmbExtendedAuthenticator authenticator ) throws SmbException, MalformedURLException, UnknownHostException{
+        this( new SmbFile( url, authenticator ));
+    }
+    // SmbAuthenticator<<
 }
 

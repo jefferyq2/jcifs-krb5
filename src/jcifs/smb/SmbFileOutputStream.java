@@ -18,12 +18,10 @@
 
 package jcifs.smb;
 
-import java.net.URL;
-import java.io.OutputStream;
 import java.io.IOException;
-import java.net.UnknownHostException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
-import jcifs.util.LogStream;
+import java.net.UnknownHostException;
 
 /**
  * This <code>OutputStream</code> can write bytes to a file on an SMB file server.
@@ -255,5 +253,29 @@ if ((flags & 1) != 0) {
             }
         } while( len > 0 );
     }
+    // >>SmbAuthenticator
+    /**
+     * Instance a SmbFileOutputStream object using spicified SmbAuthenticator.
+     * The authentication information in URL will be ignored.
+     *
+     * @param url
+     * @param authenticator
+     */
+    public SmbFileOutputStream( String url , SmbExtendedAuthenticator authenticator) throws SmbException, MalformedURLException, UnknownHostException {
+        this( url, authenticator, false );
+    }
+    /**
+     * Instance a SmbFileOutputStream object using spicified SmbAuthenticator.
+     * The authentication information in URL will be ignored.
+     *
+     * @param url
+     * @param authenticator
+     * @param append
+     */
+    public SmbFileOutputStream( String url, SmbExtendedAuthenticator authenticator, boolean append ) throws SmbException, MalformedURLException, UnknownHostException {
+        this( new SmbFile( url, authenticator ), append );
+    }
+    // SmbAuthenticator<<
+
 }
 

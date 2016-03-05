@@ -18,6 +18,8 @@
 
 package jcifs.smb;
 
+import jcifs.Config;
+
 import java.io.UnsupportedEncodingException;
 
 class SmbComNegotiate extends ServerMessageBlock {
@@ -26,7 +28,10 @@ class SmbComNegotiate extends ServerMessageBlock {
 
     SmbComNegotiate() {
         command = SMB_COM_NEGOTIATE;
-        flags2 = DEFAULT_FLAGS2;
+        // >>SmbAuthenticator
+//      flags2 = DEFAULT_FLAGS2;
+      flags2 = Config.getInt( "jcifs.smb.client.flags2", DEFAULT_FLAGS2 );
+      // SmbAuthenticator<<
     }
 
     int writeParameterWordsWireFormat( byte[] dst, int dstIndex ) {

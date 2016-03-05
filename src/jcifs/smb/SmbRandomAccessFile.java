@@ -18,14 +18,13 @@
 
 package jcifs.smb;
 
+import jcifs.util.Encdec;
+
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
-import jcifs.util.Encdec;
 
 public class SmbRandomAccessFile implements DataOutput, DataInput {
 
@@ -330,5 +329,24 @@ public class SmbRandomAccessFile implements DataOutput, DataInput {
         }
         write( dst, 0, size );
     }
+    // >>SmbAuthenticator
+    /**
+     * This constructor is used to instance a SmbRandomAccessFile object with
+     * Extended Security Authentication by provide a SmbAuthenticator object.
+     *
+     * @param url
+     * @param mode
+     * @param shareAccess
+     * @param authenticator
+     * @throws SmbException
+     * @throws MalformedURLException
+     * @throws UnknownHostException
+     */
+    public SmbRandomAccessFile( String url, String mode, int shareAccess, SmbExtendedAuthenticator authenticator )
+        throws SmbException, MalformedURLException, UnknownHostException {
+        this( new SmbFile( url, authenticator, shareAccess ), mode );
+    }
+    // SmbAuthenticator<<
+
 }
 

@@ -19,10 +19,13 @@
 
 package jcifs.dcerpc;
 
+import jcifs.dcerpc.msrpc.lsarpc;
+import jcifs.dcerpc.msrpc.netdfs;
+import jcifs.dcerpc.msrpc.samr;
+import jcifs.dcerpc.msrpc.srvsvc;
+
 import java.util.HashMap;
 import java.util.Iterator;
-
-import jcifs.dcerpc.msrpc.*;
 
 public class DcerpcBinding {
 
@@ -56,10 +59,9 @@ public class DcerpcBinding {
 
     void setOption(String key, Object val) throws DcerpcException {
         if (key.equals("endpoint")) {
-            endpoint = val.toString();
-            String lep = endpoint.toLowerCase();
-            if (lep.startsWith("\\pipe\\")) {
-                String iface = (String)INTERFACES.get(lep.substring(6));
+            endpoint = val.toString().toLowerCase();
+            if (endpoint.startsWith("\\pipe\\")) {
+                String iface = (String)INTERFACES.get(endpoint.substring(6));
                 if (iface != null) {
                     int c, p;
                     c = iface.indexOf(':');

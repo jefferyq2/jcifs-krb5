@@ -1,9 +1,10 @@
 package jcifs.smb;
 
-import java.util.LinkedList;
-import java.net.InetAddress;
-import java.util.TimeZone;
 import jcifs.Config;
+
+import java.net.InetAddress;
+import java.util.LinkedList;
+import java.util.TimeZone;
 
 interface SmbConstants {
 
@@ -160,5 +161,7 @@ interface SmbConstants {
     static final String NATIVE_LANMAN =
             Config.getProperty( "jcifs.smb.client.nativeLanMan", "jCIFS" );
     static final int VC_NUMBER = 1;
-    static final SmbTransport NULL_TRANSPORT = new SmbTransport( null, 0, null, 0 );
+    // >>SmbAuthenticator
+//  static final SmbTransport NULL_TRANSPORT = new SmbTransport( null, 0, null, 0 );
+  // SmbAuthenticator<<
 }

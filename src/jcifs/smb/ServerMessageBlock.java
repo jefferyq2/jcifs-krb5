@@ -18,16 +18,13 @@
 
 package jcifs.smb;
 
-import jcifs.Config;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
-import java.util.Date;
 import jcifs.util.Hexdump;
 import jcifs.util.LogStream;
-import jcifs.util.transport.*;
+import jcifs.util.transport.Request;
+import jcifs.util.transport.Response;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
 abstract class ServerMessageBlock extends Response implements Request, SmbConstants {
 
@@ -181,6 +178,9 @@ abstract class ServerMessageBlock extends Response implements Request, SmbConsta
     int signSeq;
     boolean verifyFailed;
     NtlmPasswordAuthentication auth = null;
+    //>>SmbAuthenticator
+    SmbExtendedAuthenticator authenticator = null;
+    //SmbAuthenticator<<
     String path;
     SigningDigest digest = null;
     ServerMessageBlock response;
