@@ -7,6 +7,12 @@
     <packaging>jar</packaging>
     <name>jcifs-krb5</name>
 
+    <scm>
+        <connection>scm:git:git@github.com:jaeksoft/jcifs-krb5.git</connection>
+        <developerConnection>scm:git:git@github.com:jaeksoft/jcifs-krb5.git</developerConnection>
+        <url>git@github.com:jaeksoft/jcifs-krb5.git</url>
+    </scm>
+
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
