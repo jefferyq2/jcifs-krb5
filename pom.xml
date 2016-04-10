@@ -6,6 +6,13 @@
     <packaging>jar</packaging>
     <name>jcifs-krb5</name>
 
+    <description>JCIFS is an Open Source client library that implements the CIFS/SMB networking protocol in 100% Java
+    </description>
+    <organization>
+        <name>Jaeksoft OpenSearchServer</name>
+        <url>http://www.opensearchserver.com</url>
+    </organization>
+
     <scm>
         <connection>scm:git:git@github.com:jaeksoft/jcifs-krb5.git</connection>
         <developerConnection>scm:git:git@github.com:jaeksoft/jcifs-krb5.git</developerConnection>
