@@ -132,18 +132,34 @@ public class SmbNamedPipe extends SmbFile {
     public SmbNamedPipe( String url, int pipeType )
                             throws MalformedURLException, UnknownHostException {
         super( url );
-        this.pipeType = pipeType;
-        type = TYPE_NAMED_PIPE;
+        init( pipeType );
     }
+
     public SmbNamedPipe( String url, int pipeType, NtlmPasswordAuthentication auth )
                             throws MalformedURLException, UnknownHostException {
         super( url, auth );
-        this.pipeType = pipeType;
-        type = TYPE_NAMED_PIPE;
+        init( pipeType );
     }
+
+    public SmbNamedPipe( String url, int pipeType, SmbExtendedAuthenticator auth )
+                            throws MalformedURLException, UnknownHostException {
+        super( url, auth);
+        init( pipeType );
+    }
+
     public SmbNamedPipe( URL url, int pipeType, NtlmPasswordAuthentication auth )
                             throws MalformedURLException, UnknownHostException {
         super( url, auth );
+        init( pipeType );
+    }
+
+    public SmbNamedPipe( URL url, int pipeType, SmbExtendedAuthenticator auth )
+                            throws MalformedURLException, UnknownHostException {
+        super( url, auth );
+        init( pipeType );
+    }
+
+    private void init(int pipeType) {
         this.pipeType = pipeType;
         type = TYPE_NAMED_PIPE;
     }

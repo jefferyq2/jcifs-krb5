@@ -19,13 +19,14 @@
 
 package jcifs.dcerpc;
 
-import java.io.*;
-import java.net.*;
-import java.security.Principal;
-
-import jcifs.smb.NtlmPasswordAuthentication;
-import jcifs.util.Hexdump;
 import jcifs.dcerpc.ndr.NdrBuffer;
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbExtendedAuthenticator;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
+import java.security.Principal;
 
 public abstract class DcerpcHandle implements DcerpcConstants {
 
@@ -109,27 +110,30 @@ public abstract class DcerpcHandle implements DcerpcConstants {
     protected DcerpcSecurityProvider securityProvider = null;
     private static int call_id = 1;
 
-    public static DcerpcHandle getHandle(String url,
-                NtlmPasswordAuthentication auth)
+    public static <Authenticator> DcerpcHandle getHandle(String url,
+            Authenticator auth)
                 throws UnknownHostException, MalformedURLException, DcerpcException {
         if (url.startsWith("ncacn_np:")) {
-            return new DcerpcPipeHandle(url, auth);
+            return (auth instanceof NtlmPasswordAuthentication)?
+                    new DcerpcPipeHandle(url, (NtlmPasswordAuthentication)auth):
+                    new DcerpcPipeHandle(url, (SmbExtendedAuthenticator)auth);
         }
         throw new DcerpcException("DCERPC transport not supported: " + url);
     }
 
     public void bind() throws DcerpcException, IOException {
-synchronized (this) {
-        try {
-            state = 1;
-            DcerpcMessage bind = new DcerpcBind(binding, this);
-            sendrecv(bind);
-        } catch (IOException ioe) {
-            state = 0;
-            throw ioe;
+        synchronized (this) {
+            try {
+                state = 1;
+                DcerpcMessage bind = new DcerpcBind(binding, this);
+                sendrecv(bind);
+            } catch (IOException ioe) {
+                state = 0;
+                throw ioe;
+            }
         }
-}
     }
+
     public void sendrecv(DcerpcMessage msg) throws DcerpcException, IOException {
         byte[] stub, frag;
         NdrBuffer buf, fbuf;

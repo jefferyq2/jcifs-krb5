@@ -19,22 +19,36 @@
 
 package jcifs.dcerpc;
 
-import java.net.*;
-import java.io.*;
-
-import jcifs.dcerpc.ndr.NdrBuffer;
 import jcifs.smb.*;
-import jcifs.util.*;
+import jcifs.util.Encdec;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 
 public class DcerpcPipeHandle extends DcerpcHandle {
+
+                /* This 0x20000 bit is going to get chopped! */
+    final static int pipeFlags = (0x2019F << 16) | SmbNamedPipe.PIPE_TYPE_RDWR | SmbNamedPipe.PIPE_TYPE_DCE_TRANSACT;
 
     SmbNamedPipe pipe;
     SmbFileInputStream in = null;
     SmbFileOutputStream out = null;
     boolean isStart = true;
 
-    public DcerpcPipeHandle(String url,
-                NtlmPasswordAuthentication auth)
+    public DcerpcPipeHandle(String url, NtlmPasswordAuthentication auth)
+                throws UnknownHostException, MalformedURLException, DcerpcException {
+        url = init(url);
+        pipe = new SmbNamedPipe(url, pipeFlags, auth);
+    }
+
+    public DcerpcPipeHandle(String url, SmbExtendedAuthenticator auth)
+                throws UnknownHostException, MalformedURLException, DcerpcException {
+        url = init(url);
+        pipe = new SmbNamedPipe(url, pipeFlags, auth);
+    }
+
+    private String init(String url)
                 throws UnknownHostException, MalformedURLException, DcerpcException {
         binding = DcerpcHandle.parseBinding(url);
         url = "smb://" + binding.server + "/IPC$/" + binding.endpoint.substring(6);
@@ -49,10 +63,7 @@ public class DcerpcPipeHandle extends DcerpcHandle {
         if (params.length() > 0)
             url += "?" + params.substring(1);
 
-        pipe = new SmbNamedPipe(url,
-                /* This 0x20000 bit is going to get chopped! */
-                (0x2019F << 16) | SmbNamedPipe.PIPE_TYPE_RDWR | SmbNamedPipe.PIPE_TYPE_DCE_TRANSACT,
-                auth);
+        return url;
     }
 
     protected void doSendFragment(byte[] buf,
