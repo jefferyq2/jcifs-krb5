@@ -57,6 +57,7 @@ public interface NtStatus {
     public static final int NT_STATUS_ACCOUNT_DISABLED = 0xC0000072;
     public static final int NT_STATUS_NONE_MAPPED = 0xC0000073;
     public static final int NT_STATUS_INVALID_SID = 0xC0000078;
+    public static final int NT_STATUS_DISK_FULL = 0xC000007f;
     public static final int NT_STATUS_INSTANCE_NOT_AVAILABLE = 0xC00000ab;
     public static final int NT_STATUS_PIPE_NOT_AVAILABLE = 0xC00000ac;
     public static final int NT_STATUS_INVALID_PIPE_STATE = 0xC00000ad;
@@ -80,6 +81,7 @@ public interface NtStatus {
     public static final int NT_STATUS_LOGON_TYPE_NOT_GRANTED = 0xC000015b;
     public static final int NT_STATUS_NO_TRUST_SAM_ACCOUNT = 0xC000018b;
     public static final int NT_STATUS_TRUSTED_DOMAIN_FAILURE = 0xC000018c;
+    public static final int NT_STATUS_TRUSTED_RELATIONSHIP_FAILURE = 0xC000018d;
     public static final int NT_STATUS_NOLOGON_WORKSTATION_TRUST_ACCOUNT = 0xC0000199;
     public static final int NT_STATUS_PASSWORD_MUST_CHANGE = 0xC0000224;
     public static final int NT_STATUS_NOT_FOUND = 0xC0000225;
@@ -121,6 +123,7 @@ public interface NtStatus {
         NT_STATUS_ACCOUNT_DISABLED,
         NT_STATUS_NONE_MAPPED,
         NT_STATUS_INVALID_SID,
+        NT_STATUS_DISK_FULL,
         NT_STATUS_INSTANCE_NOT_AVAILABLE,
         NT_STATUS_PIPE_NOT_AVAILABLE,
         NT_STATUS_INVALID_PIPE_STATE,
@@ -144,6 +147,7 @@ public interface NtStatus {
         NT_STATUS_LOGON_TYPE_NOT_GRANTED,
         NT_STATUS_NO_TRUST_SAM_ACCOUNT,
         NT_STATUS_TRUSTED_DOMAIN_FAILURE,
+        NT_STATUS_TRUSTED_RELATIONSHIP_FAILURE,
         NT_STATUS_NOLOGON_WORKSTATION_TRUST_ACCOUNT,
         NT_STATUS_PASSWORD_MUST_CHANGE,
         NT_STATUS_NOT_FOUND,
@@ -186,6 +190,7 @@ public interface NtStatus {
         "Logon failure: account currently disabled.",
         "No mapping between account names and security IDs was done.",
         "The security ID structure is invalid.",
+        "The file system is full.",
         "All pipe instances are busy.",
         "All pipe instances are busy.",
         "The pipe state is invalid.",
@@ -208,13 +213,14 @@ public interface NtStatus {
         "The specified local group does not exist.",
         "Logon failure: the user has not been granted the requested logon type at this computer.",
         "The SAM database on the Windows NT Server does not have a computer account for this workstation trust relationship.",
-        "The trust relationship between the primary domain and the trusted domain failed.",
+        "The logon request failed because the trust relationship between the primary domain and the trusted domain failed.",
+        "The logon request failed because the trust relationship between this workstation and the primary domain failed.",
         "The account used is a Computer Account. Use your global user account or local user account to access this server.",
         "The user must change his password before he logs on the first time.",
-        "NT_STATUS_NOT_FOUND",
+        "The object was not found.",
         "The referenced account is currently locked out and may not be logged on to.",
         "The remote system is not reachable by the transport.",
-        "NT_STATUS_IO_REPARSE_TAG_NOT_HANDLED",
+        "The layered file system driver for this I/O tag did not handle it when needed.",
     };
 }
 

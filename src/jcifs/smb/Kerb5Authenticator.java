@@ -1,23 +1,17 @@
 package jcifs.smb;
 
+import jcifs.Config;
+import org.ietf.jgss.GSSContext;
+import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
+
+import javax.security.auth.Subject;
+import javax.security.auth.kerberos.KerberosPrincipal;
 import java.security.Key;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Iterator;
 import java.util.Set;
-
-import javax.security.auth.Subject;
-import javax.security.auth.kerberos.KerberosPrincipal;
-
-import org.ietf.jgss.GSSContext;
-import org.ietf.jgss.GSSCredential;
-import org.ietf.jgss.GSSException;
-
-import jcifs.Config;
-import jcifs.smb.ServerMessageBlock;
-import jcifs.smb.Kerb5SessionSetupAndX;
-import jcifs.smb.SmbException;
-import jcifs.smb.SmbSession;
 
 // >>SmbAuthenticator
 /**
@@ -183,7 +177,7 @@ public class Kerb5Authenticator implements SmbExtendedAuthenticator{
             String host = session.transport.address.getHostAddress();
             try{
                 host = session.transport.address.getHostName();
-            }catch(Throwable e){}
+            }catch(Exception e){}
             context = createContext(host);
             spnego = new SpnegoContext(context.getGSSContext());
             
@@ -206,7 +200,7 @@ public class Kerb5Authenticator implements SmbExtendedAuthenticator{
                                         (session.transport.server.signaturesEnabled && SmbConstants.SIGNPREF))){
                         Key key = context.searchSessionKey(subject);
                         if(key == null){
-                            throw new SmbException("Not found the session key."); 
+                            throw new SmbException("Kerberos session key not found.");
                         }
                         request.digest = new SigningDigest(key.getEncoded());
                     }
@@ -221,7 +215,6 @@ public class Kerb5Authenticator implements SmbExtendedAuthenticator{
             session.setSessionSetup(true);
 
         }catch (GSSException e) {
-            e.printStackTrace();
             throw new SmbException(e.getMessage());
         }finally{
             if(context != null){
@@ -253,8 +246,9 @@ public class Kerb5Authenticator implements SmbExtendedAuthenticator{
     public boolean equals(Object arg0) {
         // >> SmbAuthenticator 11062008
         //this method is called from SmbSession
-        return this.getSubject()==((Kerb5Authenticator)arg0).getSubject();
-//        return false;
+        if (arg0 != null && Kerb5Authenticator.class == arg0.getClass())
+            return this.getSubject()==((Kerb5Authenticator)arg0).getSubject();
+        return false;
          // SmbAuthenticator 11062008<<
     }
 
