@@ -1,3 +1,18 @@
+# JCIFS With Kerberos support.
+
+The library is available on Maven Central:
+
+```xml
+<dependency>
+    <groupId>com.jaeksoft</groupId>
+    <artifactId>jcifs-krb5-jdk7</artifactId>
+    <version>1.3.18.1</version>
+</dependency>
+```
+
+Change Log
+----------
+
 Wed Oct 29 21:08:01 EDT 2014
 jcifs-1.3.18
 
