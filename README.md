@@ -20,6 +20,15 @@ Snapshot version:
     <artifactId>jcifs-krb5-jdk7</artifactId>
     <version>1.3.18.2-SNAPSHOT</version>
 </dependency>
+
+<repositories>
+    <repository>
+        <id>oss.sonatype.org-snapshot</id>
+        <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+        <releases><enabled>false</enabled></releases>
+        <snapshots><enabled>true</enabled></snapshots>
+    </repository>
+</repositories>
 ```
 
 Change Log
