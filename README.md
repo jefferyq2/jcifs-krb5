@@ -2,6 +2,8 @@
 
 The library is available on Maven Central:
 
+Release version:
+
 ```xml
 <dependency>
     <groupId>com.jaeksoft</groupId>
@@ -10,8 +12,51 @@ The library is available on Maven Central:
 </dependency>
 ```
 
+Snapshot version:
+
+```xml
+<dependency>
+    <groupId>com.jaeksoft</groupId>
+    <artifactId>jcifs-krb5-jdk7</artifactId>
+    <version>1.3.18.2-SNAPSHOT</version>
+</dependency>
+```
+
 Change Log
 ----------
+
+jcifs-1.3.18.2
+
+Kerberos based connections fail when signing is enabled
+
+The SMB context is signed by the kerberos connection session key. This
+key was extracted from the subject credentials, which looks as if could
+only have worked by coincidence.
+
+The kerberos connection session contect key is not accessible via the
+JGSS API IBM and Oracle both implement a similar API to make an
+ExtendedGSSContext available.
+
+The older implementation to find the session key is still available as
+a fallback, but it is not expected, that it works.
+
+From "JCIFS with Kerberos doesn't work on JDK 7":
+
+https://bugs.openjdk.java.net/browse/JDK-8031973:
+
+This is a bug in JCIFS. It seems the SMB packet it generates that
+includes the AP-REQ token also includes something else that should be
+encrypted with the *context* session key. The standard GSS-API does not
+provide such a method so it looks up the service ticket in the subject
+and use its *ticket* session key instead. The context session key is not
+the ticket session key if sub key is used.
+
+Possible patch: Fix jcifs.smb.Kerb5Context's searchSessionKey() method
+to call Oracle JDK's
+ExtendedGSSContext::inquireSecContext(InquireType.KRB5_GET_SESSION_KEY)
+to get the real session key. The classes are defined in
+com.sun.security.jgss.
+
 
 Wed Oct 29 21:08:01 EDT 2014
 jcifs-1.3.18
